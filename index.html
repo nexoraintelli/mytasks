@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Controle de clientes e fluxo de otimização SEO" />
+  <title>Controle de Clientes SEO</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">Q</span>
+      <div>
+        <strong>SEO Control</strong>
+        <small>Clientes e tarefas</small>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <button class="menu-item active" data-view="dashboard">Dashboard</button>
+      <button class="menu-item" data-view="clients">Clientes</button>
+      <button class="menu-item" data-view="new-client">Novo cliente</button>
+    </nav>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1 id="page-title">Dashboard</h1>
+        <p id="page-subtitle">Acompanhe o andamento de cada cliente.</p>
+      </div>
+
+      <button class="primary-button" id="new-client-button">+ Novo cliente</button>
+    </header>
+
+    <section id="dashboard-view" class="view active">
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>Total de clientes</span>
+          <strong id="stat-total">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Em andamento</span>
+          <strong id="stat-progress">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Aguardando cliente</span>
+          <strong id="stat-waiting">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Concluídos</span>
+          <strong id="stat-done">0</strong>
+        </article>
+      </div>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Clientes recentes</h2>
+            <p>Veja rapidamente o estágio atual de cada projeto.</p>
+          </div>
+        </div>
+
+        <div id="dashboard-client-list" class="client-list empty-state">
+          Nenhum cliente cadastrado ainda.
+        </div>
+      </section>
+    </section>
+
+    <section id="clients-view" class="view">
+      <section class="panel">
+        <div class="panel-heading panel-heading-row">
+          <div>
+            <h2>Todos os clientes</h2>
+            <p>Pesquise, abra e atualize os controles.</p>
+          </div>
+
+          <input
+            type="search"
+            id="client-search"
+            class="search-input"
+            placeholder="Buscar por cliente, código ou produto"
+          />
+        </div>
+
+        <div id="client-list" class="client-list empty-state">
+          Nenhum cliente cadastrado ainda.
+        </div>
+      </section>
+    </section>
+
+    <section id="new-client-view" class="view">
+      <form id="client-form">
+        <input type="hidden" id="client-id" />
+
+        <section class="panel form-section">
+          <div class="section-number">1</div>
+
+          <div class="section-content">
+            <div class="panel-heading">
+              <h2>Informações principais</h2>
+              <p>Dados gerais do cliente e da rotina de otimização.</p>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Código
+                <input type="text" id="client-code" required placeholder="Ex.: CL-001" />
+              </label>
+
+              <label>
+                Nome do cliente
+                <input type="text" id="client-name" required placeholder="Nome da marca ou empresa" />
+              </label>
+
+              <label class="full-width">
+                O que é o produto
+                <textarea id="client-product" rows="3" placeholder="Descreva o produto ou categoria"></textarea>
+              </label>
+
+              <label>
+                Número da pasta
+                <input type="text" id="folder-number" placeholder="Ex.: Pasta 125" />
+              </label>
+
+              <label>
+                Frequência de otimização
+                <select id="optimization-frequency">
+                  <option value="">Selecione</option>
+                  <option value="Semanal">Semanal</option>
+                  <option value="Quinzenal">Quinzenal</option>
+                  <option value="Mensal">Mensal</option>
+                  <option value="Trimestral">Trimestral</option>
+                  <option value="Pontual">Pontual</option>
+                </select>
+              </label>
+
+              <label>
+                Link da Survey
+                <input type="url" id="survey-link" placeholder="https://..." />
+              </label>
+
+              <label>
+                Gong da call com o cliente
+                <input type="url" id="gong-link" placeholder="https://..." />
+              </label>
+
+              <label>
+                Data da otimização automática
+                <input type="date" id="automatic-date" />
+              </label>
+
+              <label>
+                Status geral
+                <select id="general-status">
+                  <option value="Em andamento">Em andamento</option>
+                  <option value="Aguardando time">Aguardando time</option>
+                  <option value="Aguardando cliente">Aguardando cliente</option>
+                  <option value="Aprovado">Aprovado</option>
+                  <option value="Concluído">Concluído</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel form-section">
+          <div class="section-number">2</div>
+
+          <div class="section-content">
+            <div class="panel-heading panel-heading-row">
+              <div>
+                <h2>ASINs</h2>
+                <p>Controle os ASINs já otimizados e os próximos da fila.</p>
+              </div>
+
+              <button type="button" class="secondary-button" id="add-asin-button">+ Adicionar ASIN</button>
+            </div>
+
+            <div id="asin-list" class="repeat-list"></div>
+          </div>
+        </section>
+
+        <section class="panel form-section">
+          <div class="section-number">3</div>
+
+          <div class="section-content">
+            <div class="panel-heading panel-heading-row">
+              <div>
+                <h2>Rounds de otimização</h2>
+                <p>Registre cada rodada de revisão.</p>
+              </div>
+
+              <button type="button" class="secondary-button" id="add-round-button">+ Adicionar round</button>
+            </div>
+
+            <div id="round-list" class="repeat-list"></div>
+          </div>
+        </section>
+
+        <section class="panel form-section">
+          <div class="section-number">4</div>
+
+          <div class="section-content">
+            <div class="panel-heading panel-heading-row">
+              <div>
+                <h2>Planilhas de sugestões</h2>
+                <p>Associe cada planilha ao respectivo ASIN.</p>
+              </div>
+
+              <button type="button" class="secondary-button" id="add-sheet-button">+ Adicionar planilha</button>
+            </div>
+
+            <div id="sheet-list" class="repeat-list"></div>
+          </div>
+        </section>
+
+        <section class="panel form-section">
+          <div class="section-number">5</div>
+
+          <div class="section-content">
+            <div class="panel-heading">
+              <h2>Fluxo de trabalho</h2>
+              <p>Marque cada etapa conforme ela for concluída.</p>
+            </div>
+
+            <div id="workflow-list" class="workflow-list"></div>
+          </div>
+        </section>
+
+        <div class="form-actions">
+          <button type="button" class="danger-button hidden" id="delete-client-button">Excluir cliente</button>
+
+          <div class="action-group">
+            <button type="button" class="secondary-button" id="cancel-button">Cancelar</button>
+            <button type="submit" class="primary-button">Salvar cliente</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <template id="asin-template">
+    <article class="repeat-card">
+      <div class="repeat-grid asin-grid">
+        <label>
+          ASIN
+          <input type="text" data-field="asin" placeholder="Ex.: B0ABC12345" />
+        </label>
+
+        <label>
+          Situação
+          <select data-field="status">
+            <option value="Para otimizar">Para otimizar</option>
+            <option value="Já otimizado">Já otimizado</option>
+          </select>
+        </label>
+
+        <label>
+          % de vendas
+          <input type="number" data-field="salesPercentage" min="0" max="100" step="0.01" placeholder="0" />
+        </label>
+
+        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="round-template">
+    <article class="repeat-card">
+      <div class="repeat-grid round-grid">
+        <label>
+          Número do round
+          <input type="number" data-field="number" min="1" placeholder="1" />
+        </label>
+
+        <label>
+          Data do round
+          <input type="date" data-field="date" />
+        </label>
+
+        <label class="notes-field">
+          Observações
+          <input type="text" data-field="notes" placeholder="Ex.: Ajustes solicitados pelo time" />
+        </label>
+
+        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="sheet-template">
+    <article class="repeat-card">
+      <div class="repeat-grid sheet-grid">
+        <label>
+          ASIN
+          <input type="text" data-field="asin" placeholder="Ex.: B0ABC12345" />
+        </label>
+
+        <label class="sheet-link-field">
+          Link da planilha
+          <input type="url" data-field="link" placeholder="https://..." />
+        </label>
+
+        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
