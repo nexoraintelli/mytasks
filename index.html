@@ -193,7 +193,7 @@
             <div class="panel-heading panel-heading-row">
               <div>
                 <h2>Rounds de otimização</h2>
-                <p>Registre cada rodada de revisão.</p>
+                <p>Cada round possui seu próprio fluxo completo de trabalho.</p>
               </div>
 
               <button type="button" class="secondary-button" id="add-round-button">+ Adicionar round</button>
@@ -219,9 +219,6 @@
             <div id="sheet-list" class="repeat-list"></div>
           </div>
         </section>
-
-        <section class="panel form-section">
-          <div class="section-number">5</div>
 
           <div class="section-content">
             <div class="panel-heading">
@@ -272,45 +269,92 @@
   </template>
 
   <template id="round-template">
-    <article class="repeat-card">
-      <div class="repeat-grid round-grid">
-        <label>
-          Número do round
-          <input type="number" data-field="number" min="1" placeholder="1" />
-        </label>
+    <article class="round-card">
 
-        <label>
-          Data do round
-          <input type="date" data-field="date" />
-        </label>
+        <div class="round-header">
+            <div>
+                <span class="round-label">
+                    ROUND DE OTIMIZAÇÃO
+                </span>
 
-        <label class="notes-field">
-          Observações
-          <input type="text" data-field="notes" placeholder="Ex.: Ajustes solicitados pelo time" />
-        </label>
+                <h3 data-round-title>
+                    Round
+                </h3>
+            </div>
 
-        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
-      </div>
+            <div class="round-header-actions">
+                <span
+                    class="round-progress-text"
+                    data-round-progress-text
+                >
+                    0% concluído
+                </span>
+
+                <button
+                    type="button"
+                    class="icon-button remove-round"
+                    aria-label="Remover round"
+                >
+                    ×
+                </button>
+            </div>
+        </div>
+
+        <div class="round-progress-bar">
+            <div
+                class="round-progress-fill"
+                data-round-progress-fill
+            ></div>
+        </div>
+
+        <div class="repeat-grid round-grid">
+
+            <label>
+                Número do round
+
+                <input
+                    type="number"
+                    data-field="number"
+                    min="1"
+                    placeholder="1"
+                >
+            </label>
+
+            <label>
+                Data do round
+
+                <input
+                    type="date"
+                    data-field="date"
+                >
+            </label>
+
+            <label class="notes-field">
+                Observações
+
+                <input
+                    type="text"
+                    data-field="notes"
+                    placeholder="Ex.: Ajustes solicitados pelo time"
+                >
+            </label>
+
+        </div>
+
+        <div class="round-workflow-heading">
+            <div>
+                <h4>Fluxo deste round</h4>
+
+                <p>
+                    Acompanhe todas as etapas desta rodada.
+                </p>
+            </div>
+        </div>
+
+        <div class="workflow-list round-workflow-list"></div>
+
     </article>
-  </template>
-
-  <template id="sheet-template">
-    <article class="repeat-card">
-      <div class="repeat-grid sheet-grid">
-        <label>
-          ASIN
-          <input type="text" data-field="asin" placeholder="Ex.: B0ABC12345" />
-        </label>
-
-        <label class="sheet-link-field">
-          Link da planilha
-          <input type="url" data-field="link" placeholder="https://..." />
-        </label>
-
-        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
-      </div>
-    </article>
-  </template>
+</template>
 
   <script src="script.js"></script>
 </body>
