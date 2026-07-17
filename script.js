@@ -1,17 +1,17 @@
 const STORAGE_KEY = "seoControlClients";
 
 const workflowSteps = [
-  "Cliente recebido",
-  "Código recebido",
-  "Planilha 1A recebida",
-  "Planilhas 1B e 1C geradas no Claude",
-  "Sugestões de SEO preenchidas na planilha 1C",
-  "Revisão com o time",
-  "Aprovação do time",
-  "Versão final da planilha gerada",
-  "E-mail enviado ao cliente",
-  "Aprovação do cliente",
-  "Upload realizado no portal"
+    "Cliente recebido / round iniciado",
+    "Código e escopo confirmados",
+    "Planilha 1A recebida",
+    "Planilhas 1B e 1C geradas no Claude",
+    "Sugestões de SEO preenchidas na planilha 1C",
+    "Revisão com o time",
+    "Aprovação do time",
+    "Versão final da planilha gerada",
+    "E-mail enviado ao cliente",
+    "Aprovação do cliente",
+    "Upload realizado no portal"
 ];
 
 const state = {
@@ -49,7 +49,13 @@ document.querySelector("#cancel-button").addEventListener("click", () => {
 });
 
 document.querySelector("#add-asin-button").addEventListener("click", () => addAsinRow());
-document.querySelector("#add-round-button").addEventListener("click", () => addRoundRow());
+document
+    .querySelector("#add-round-button")
+    .addEventListener("click", () => {
+        addRoundRow({
+            number: getNextRoundNumber()
+        });
+    });
 document.querySelector("#add-sheet-button").addEventListener("click", () => addSheetRow());
 
 document.querySelector("#client-search").addEventListener("input", (event) => {
@@ -118,7 +124,9 @@ function navigate(viewName) {
 function prepareNewClient() {
   resetForm();
   addAsinRow();
-  addRoundRow();
+  addRoundRow({
+    number: 1
+});
   addSheetRow();
   renderWorkflow();
 }
@@ -129,41 +137,8 @@ function resetForm() {
   asinList.innerHTML = "";
   roundList.innerHTML = "";
   sheetList.innerHTML = "";
+  
   deleteClientButton.classList.add("hidden");
-  renderWorkflow();
-}
-
-function renderWorkflow(values = []) {
-  workflowList.innerHTML = "";
-
-  workflowSteps.forEach((step, index) => {
-    const item = document.createElement("label");
-    item.className = "workflow-item";
-
-    const checked = Boolean(values[index]?.completed);
-
-    item.innerHTML = `
-      <input type="checkbox" data-workflow-index="${index}" ${checked ? "checked" : ""}>
-      <div>
-        <strong>${index + 1}. ${step}</strong>
-        <small>Marque quando a etapa estiver concluída.</small>
-      </div>
-      <input
-        type="date"
-        data-workflow-date="${index}"
-        value="${values[index]?.date || ""}"
-        aria-label="Data da etapa"
-      >
-    `;
-
-    const checkbox = item.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener("change", () => {
-      item.classList.toggle("completed", checkbox.checked);
-    });
-
-    item.classList.toggle("completed", checked);
-    workflowList.appendChild(item);
-  });
 }
 
 function addAsinRow(data = {}) {
@@ -172,12 +147,122 @@ function addAsinRow(data = {}) {
   attachRemove(row);
   asinList.appendChild(row);
 }
-
 function addRoundRow(data = {}) {
-  const row = document.querySelector("#round-template").content.firstElementChild.cloneNode(true);
-  fillRepeatRow(row, data);
-  attachRemove(row);
-  roundList.appendChild(row);
+    const template = document.querySelector("#round-template");
+
+    const row =
+        template.content.firstElementChild.cloneNode(true);
+
+    fillRepeatRow(row, data);
+
+    const workflowValues = normalizeWorkflow(
+        data.workflow
+    );
+function renderRoundWorkflow(
+    roundRow,
+    values = []
+) {
+    const container =
+        roundRow.querySelector(
+            ".round-workflow-list"
+        );
+
+    container.innerHTML = "";
+
+    workflowSteps.forEach((step, index) => {
+        const item =
+            document.createElement("label");
+
+        item.className = "workflow-item";
+
+        const checked =
+            Boolean(values[index]?.completed);
+
+        item.innerHTML = `
+            <input
+                type="checkbox"
+                data-step-index="${index}"
+                ${checked ? "checked" : ""}
+            >
+
+            <div>
+                <strong>
+                    ${index + 1}. ${step}
+                </strong>
+
+                <small>
+                    Marque quando esta etapa do round
+                    estiver concluída.
+                </small>
+            </div>
+
+            <input
+                type="date"
+                data-step-date="${index}"
+                value="${values[index]?.date || ""}"
+                aria-label="Data da etapa"
+            >
+        `;
+
+        const checkbox =
+            item.querySelector(
+                'input[type="checkbox"]'
+            );
+
+        checkbox.addEventListener(
+            "change",
+            () => {
+                item.classList.toggle(
+                    "completed",
+                    checkbox.checked
+                );
+
+                updateRoundProgress(roundRow);
+            }
+        );
+
+        item.classList.toggle(
+            "completed",
+            checked
+        );
+
+        container.appendChild(item);
+    });
+}
+    renderRoundWorkflow(
+        row,
+        workflowValues
+    );
+
+    const numberInput =
+        row.querySelector('[data-field="number"]');
+
+    numberInput.addEventListener("input", () => {
+        updateRoundTitle(row);
+    });
+
+    updateRoundTitle(row);
+    updateRoundProgress(row);
+
+    const removeButton =
+        row.querySelector(".remove-round");
+
+    removeButton.addEventListener("click", () => {
+        const totalRounds =
+            roundList.querySelectorAll(".round-card").length;
+
+        if (totalRounds <= 1) {
+            alert(
+                "O cliente precisa ter pelo menos um round."
+            );
+
+            return;
+        }
+
+        row.remove();
+    });
+
+    roundList.appendChild(row);
 }
 
 function addSheetRow(data = {}) {
