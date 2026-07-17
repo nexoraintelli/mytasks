@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -220,16 +221,6 @@
           </div>
         </section>
 
-          <div class="section-content">
-            <div class="panel-heading">
-              <h2>Fluxo de trabalho</h2>
-              <p>Marque cada etapa conforme ela for concluída.</p>
-            </div>
-
-            <div id="workflow-list" class="workflow-list"></div>
-          </div>
-        </section>
-
         <div class="form-actions">
           <button type="button" class="danger-button hidden" id="delete-client-button">Excluir cliente</button>
 
@@ -270,91 +261,67 @@
 
   <template id="round-template">
     <article class="round-card">
-
-        <div class="round-header">
-            <div>
-                <span class="round-label">
-                    ROUND DE OTIMIZAÇÃO
-                </span>
-
-                <h3 data-round-title>
-                    Round
-                </h3>
-            </div>
-
-            <div class="round-header-actions">
-                <span
-                    class="round-progress-text"
-                    data-round-progress-text
-                >
-                    0% concluído
-                </span>
-
-                <button
-                    type="button"
-                    class="icon-button remove-round"
-                    aria-label="Remover round"
-                >
-                    ×
-                </button>
-            </div>
+      <div class="round-header">
+        <div>
+          <span class="round-label">ROUND DE OTIMIZAÇÃO</span>
+          <h3 data-round-title>Round</h3>
         </div>
 
-        <div class="round-progress-bar">
-            <div
-                class="round-progress-fill"
-                data-round-progress-fill
-            ></div>
+        <div class="round-header-actions">
+          <span class="round-progress-text" data-round-progress-text>0% concluído</span>
+          <button type="button" class="icon-button remove-round" aria-label="Remover round">×</button>
         </div>
+      </div>
 
-        <div class="repeat-grid round-grid">
+      <div class="round-progress-bar">
+        <div class="round-progress-fill" data-round-progress-fill></div>
+      </div>
 
-            <label>
-                Número do round
+      <div class="repeat-grid round-grid">
+        <label>
+          Número do round
+          <input type="number" data-field="number" min="1" placeholder="1" />
+        </label>
 
-                <input
-                    type="number"
-                    data-field="number"
-                    min="1"
-                    placeholder="1"
-                >
-            </label>
+        <label>
+          Data do round
+          <input type="date" data-field="date" />
+        </label>
 
-            <label>
-                Data do round
+        <label class="notes-field">
+          Observações
+          <input type="text" data-field="notes" placeholder="Ex.: Ajustes solicitados pelo time" />
+        </label>
+      </div>
 
-                <input
-                    type="date"
-                    data-field="date"
-                >
-            </label>
-
-            <label class="notes-field">
-                Observações
-
-                <input
-                    type="text"
-                    data-field="notes"
-                    placeholder="Ex.: Ajustes solicitados pelo time"
-                >
-            </label>
-
+      <div class="round-workflow-heading">
+        <div>
+          <h4>Fluxo deste round</h4>
+          <p>Repita e acompanhe todas as etapas desta rodada.</p>
         </div>
+      </div>
 
-        <div class="round-workflow-heading">
-            <div>
-                <h4>Fluxo deste round</h4>
-
-                <p>
-                    Acompanhe todas as etapas desta rodada.
-                </p>
-            </div>
-        </div>
-
-        <div class="workflow-list round-workflow-list"></div>
-
+      <div class="workflow-list round-workflow-list"></div>
     </article>
-</template>
+  </template>
+
+  <template id="sheet-template">
+    <article class="repeat-card">
+      <div class="repeat-grid sheet-grid">
+        <label>
+          ASIN
+          <input type="text" data-field="asin" placeholder="Ex.: B0ABC12345" />
+        </label>
+
+        <label class="sheet-link-field">
+          Link da planilha
+          <input type="url" data-field="link" placeholder="https://..." />
+        </label>
+
+        <button type="button" class="icon-button remove-row" aria-label="Remover">×</button>
+      </div>
+    </article>
+  </template>
 
   <script src="script.js"></script>
 </body>
